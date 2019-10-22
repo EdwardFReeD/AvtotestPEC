@@ -46,7 +46,7 @@ def get_cargo_list():
 #######################################################################################################################
 
 # 18|10|2019
-# Function return response from API /CARGOPICKUPNETWORK/SUBMIT/
+# Function return r from API /CARGOPICKUPNETWORK/SUBMIT/
 def cargo_network_request():
     import requests
     import json
@@ -209,16 +209,29 @@ def cargo_network_request():
         }
         headers = {'content-type': 'application/json'}
 
-        response = requests.post(url, auth=('pec_test', 'BD81AB610DB6175B4FFF0AA401A1E8AA177B4F26'),
+        r = requests.post(url, auth=('pec_test', 'BD81AB610DB6175B4FFF0AA401A1E8AA177B4F26'),
                                  data=json.dumps(request), headers=headers)
-        return str(response.json()), response.status_code
-
+        if r.status_code != 200:
+            zapis.log_read('||' + url + '||' + 'Status Code:' + str(
+                r.status_code) + '||' + 'Ошибка: Метод вернул не статус 200')
+        else:
+            otvet = r.json()
+            if 'error' in otvet:
+                zapis.log_read(
+                    '||' + url + '||' + 'Status Code:' + str(r.status_code) + '||' + 'Ошибка: вернулось error')
+            else:
+                if otvet['cargos'] == None:
+                    zapis.log_read('||' + url + '||' + 'Status Code:' + str(
+                        r.status_code) + '||' + 'Ошибка: не получен ответ от метода /PREREGISTRATION/SUBMIT/')
+                else:
+                    zapis.log_read('||' + url + '||' + 'Status Code:' + str(
+                        r.status_code) + '||' + 'Скрипт отработал успешно')
     except requests.exceptions.Timeout as e:
-        return e
+        return zapis.log_read('||' + url + '||' + 'Status Code:' + str(r.status_code) + '||' + str(e))
     except requests.exceptions.TooManyRedirects as e:
-        return e
+        return zapis.log_read('||' + url + '||' + 'Status Code:' + str(r.status_code) + '||' + str(e))
     except requests.exceptions.RequestException as e:
-        return e
+        return zapis.log_read('||' + url + '||' + 'Status Code:' + str(r.status_code) + '||' + str(e))
     except json.JSONDecodeError as e:
-        return ('Возникла ошибка: {' + str(e) + '} Связанная с URL - адресом!!!')
+        return zapis.log_read('||' + url + '||' + 'Status Code:' + str(r.status_code) + '||' + str(e))
 #######################################################################################################################
