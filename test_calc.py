@@ -78,13 +78,12 @@ def calc():
     zapis.log_read('||' + "https://pecom.ru/services-are/shipping-request/" + '||'+ 'Подача заявки:Заявка подана успешно, номер зявки ' + WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="page"]/div[2]/div/div/div/div/div/div[1]/div/div[3]/div[1]/div[2]/div[2]/div[1]/div[2]'))).text)
  except Exception:
         if sys.exc_info() != None:
-            if 'element click intercepted' in sys.exc_info()[1].msg:
                 zapis.log_read('||' + "https://pecom.ru/services-are/shipping-request/" + '||'
                            + 'Ошибка TimeOut страницы: '
-                           + sys.exc_info()[1].msg).replace('\n', ' ')
-            else:
+                           + sys.exc_info()[1].msg)
+        else:
                 zapis.log_read('||' + "https://pecom.ru/services-are/shipping-request/" + '||'
                                + 'Необработанная ошибка: '
-                               + sys.exc_info()[1].msg).replace('\n', ' ')
+                               + TimeoutException.msg)
  finally:
         driver.close()
