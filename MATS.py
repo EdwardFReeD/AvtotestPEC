@@ -1,5 +1,6 @@
 # 18|10|2019
 # Function return cargo list with no delivery and @TargetBranch@ МВ
+import zapis
 def get_cargo_list():
     import pyodbc
     # SQL Connection string
@@ -222,7 +223,7 @@ def cargo_network_request():
             else:
                 if otvet['cargos'] == None:
                     zapis.log_read('||' + url + '||' + 'Status Code:' + str(
-                        r.status_code) + '||' + 'Ошибка: не получен ответ от метода /PREREGISTRATION/SUBMIT/')
+                        r.status_code) + '||' + 'Ошибка: не получен ответ от метода /CARGOPICKUPNETWORK/SUBMIT/')
                 else:
                     zapis.log_read('||' + url + '||' + 'Status Code:' + str(
                         r.status_code) + '||' + 'Скрипт отработал успешно')
